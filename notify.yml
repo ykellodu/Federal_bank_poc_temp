@@ -1,0 +1,18 @@
+---
+- name: Notify approver about the VM snapshot and request for approve.
+  hosts: localhost
+  #become: yes
+  #become_user: root
+  gather_facts: false
+
+  tasks:
+    - name: Send email with status
+      community.general.mail:
+        host: "10.199.11.178"
+        port: 25 # Or your SMTP port, commonly 465 for SSL/TLS
+        username: "noreply_ansible@federalbank.co.in"
+        to: "ritwik@federalbank.co.in"
+        subject: "Test"
+        #body: " Please approve or disapprove in AAP platform to take snap shot of server {{ snap_server }}"
+        # secure: starttls # Or 'always', 'never', 'try' depending on your SMTP server
+      delegate_to: localhost
