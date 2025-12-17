@@ -1,0 +1,70 @@
+---
+- name: Copy installer from src machine
+  hosts: ansible_main
+  vars:
+    dir_name: "oracle_install"
+  vars_files:
+    - input_vars.yml
+  
+  tasks:
+  - name: Create Directory for Oracle Database file path - local
+    ansible.builtin.stat:
+      path: "/tmp/{{ dir_name }}"
+    register: directory_path
+    delegate_to: localhost
+
+  - name: Create a directory if it does not exist - local
+    ansible.builtin.file:
+      path: "/tmp/{{ dir_name }}"
+      state: directory
+    when: "not directory_path.stat.exists"
+    delegate_to: localhost
+
+  - name: Fetch the oracle install file
+    ansible.builtin.fetch:
+      src: "{{ path_oracle_pre_install_file }}"
+      dest: "/tmp/{{ dir_name }}/"
+      flat: yes
+    register: data_oracle_pre_install_file
+
+  - name: Fetch the oracle install file
+    ansible.builtin.fetch:
+      src: "{{ path_oracle_file }}"
+      dest: "/tmp/{{ dir_name }}/"
+      flat: yes
+    register: data_oracle_install_file
+    
+  - name: Debug
+    shell: "ls -al /tmp/{{ dir_name }}"
+    delegate_to: localhost
+
+- name: Install oracle database
+  hosts: target-host
+  gather_facts: false
+  vars:
+    dir_name: "oracle_install"
+  # vars_files:
+  #   - input_vars.yml
+  tasks:
+  - name: Create Directory for Oracle Database file path
+    ansible.builtin.stat:
+      path: "/home/{{ ansible_ssh_user }}/{{ dir_name }}"
+    register: directory_path
+
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: "/home/{{ ansible_ssh_user }}/{{ dir_name }}"
+      state: directory
+    when: "not directory_path.stat.exists"
+  
+  - name: Copy oracle install file to destination
+    copy:
+      src: "/tmp/{{ dir_name }}/"
+      dest: "/home/{{ ansible_ssh_user }}/{{ dir_name }}/"
+      owner: "{{ ansible_ssh_user }}"
+      group: "{{ ansible_ssh_user }}"
+      mode: '0755'
+    # delegate_to: localhost
+  
+  - name: Debug
+    shell: "ls -al /home/{{ ansible_ssh_user }}/{{ dir_name }}/"
