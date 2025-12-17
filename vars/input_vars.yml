@@ -1,4 +1,4 @@
 ---
-path_oracle_pre_install_file: "/home/vpsadmin/Downloads/oracle-database-preinstall-19c-1.0-1.el7.x86_64.rpm"
-path_oracle_file: "/home/vpsadmin/Downloads/oracle-database-ee-19c-1.0-1.x86_64.rpm"
-path_oracle_dir: "/home/vpsadmin/Downloads/"
+path_oracle_pre_install_file: "/home/appadmin/Downloads/oracle-database-preinstall-19c-1.0-1.el7.x86_64.rpm"
+path_oracle_file: "/home/appadmin/Downloads/oracle-database-ee-19c-1.0-1.x86_64.rpm"
+path_oracle_dir: "/home/appadmin/Downloads/"
